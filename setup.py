@@ -9,7 +9,7 @@ setup(name='scrobble_shelf',
       license='GPLv3',
       packages=['scrobble_shelf'],
       entry_points={
-          "console_scripts": ['scrobble_shelf = scrobble_shelf.scrobble_shelf:entrypoint']
+          "console_scripts": ['scrobble_shelf = scrobble_shelf.scrobble_shelf:entry_point']
       },
       install_requires={
           'pylast'

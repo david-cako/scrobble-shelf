@@ -41,7 +41,7 @@ class ScrobbleShelf():
                     "album": album.title,
                     "artist": album.artist.name,
                     "url": album.get_url(),
-                    "cover_art": os.path.relpath(cover_art_output, self.output_dir)
+                    "coverArt": os.path.relpath(cover_art_output, self.output_dir)
                 })
 
     def create_json(self):

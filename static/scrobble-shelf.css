@@ -1,0 +1,8 @@
+.shelf-item {
+    color: transparent;
+}
+.shelf-item:hover {
+    background: #000;
+    color: #fff;
+}
+

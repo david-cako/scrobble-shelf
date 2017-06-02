@@ -1,15 +1,20 @@
 var pathRoot = "/scrobble-shelf/";
 
-function trimContents(string) {
-    
+function trimStr(str) {
+    var maxLength = 15;
+    if (str.length > maxLength) {
+        return str.slice(0, 15) + "...";
+    } else {
+        return str;
+    }
 }
 
 function shelfItem(albumObj) {
     var item = 
         `<div class="shelf-item" href="${pathRoot + albumObj.url}" \
         style="background-image: url(${pathRoot + albumObj.coverArt});">
-            <div class="shelf-title">${albumObj.title}</div>
-            <div class="shelf-artist">${albumObj.artist}</div>
+            <div class="shelf-title">${trimStr(albumObj.title)}</div>
+            <div class="shelf-artist">${trimStr(albumObj.artist)}</div>
         </div>`;
     return item;
 }

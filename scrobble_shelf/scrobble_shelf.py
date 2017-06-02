@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-import pylast, os, json, argparse, requests, mimetypes
+import pylast, os, json, argparse, requests, mimetypes, urllib
 from shutil import copyfileobj
 
 API_KEY = os.environ['LAST_FM_API_KEY']
@@ -32,7 +32,7 @@ class ScrobbleShelf():
                     extension = mimetypes.guess_extension(cover_art.headers['content-type'])
                     cover_art_output = os.path.join(self.cover_art_path, str(i) + extension)
 
-                    with open(cover_art_output, 'w') as f:
+                    with open(cover_art_output, 'wb') as f:
                         cover_art.raw.decode_content = True
                         copyfileobj(cover_art.raw, f)
 
@@ -40,8 +40,10 @@ class ScrobbleShelf():
                     "index": i,
                     "album": album.title,
                     "artist": album.artist.name,
-                    "url": album.get_url(),
-                    "coverArt": os.path.relpath(cover_art_output, self.output_dir)
+                    "url": urllib.parse.unquote(album.get_url()),
+                    "coverArt": 
+                        os.path.relpath(cover_art_output, self.output_dir) if \
+                        cover_art_url else None
                 })
 
     def create_json(self):

@@ -1,8 +1,46 @@
-.shelf-item {
-    color: transparent;
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica', 'Helvetica Neue', sans-serif;
 }
-.shelf-item:hover {
-    background: #000;
-    color: #fff;
+#scrobble-shelf {
+    text-align: center;
+    width: 100%:
+}
+.shelf-item {
+    width: 300px;
+    height: 300px;
+    display: inline-block;
+    margin: 25px 25px;
+}
+.shelf-item-contents:hover {
+    opacity: 1;
+    border-color: #000;
+}
+.shelf-item-contents {
+    padding-top: 100px;
+    color: #000;
+    border: 25px solid transparent;
+    background-color: #fff;
+    font-weight: 400;
+    box-sizing: border-box;
+    opacity: 0;
+    height: 100%;
+    text-align: center;
+}
+.shelf-title, .shelf-artist {
+    pointer-events: none;
+}
+.shelf-item.no-img > .shelf-item-contents {
+    opacity: 1;
+}
+.project-link {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+}
+.project-link > a {
+    text-decoration: none;
+    color: #d60000;
 }
 

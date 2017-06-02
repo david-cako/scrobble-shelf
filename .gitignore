@@ -1,6 +1,7 @@
 *.pyc
 .DS_Store
 *.egg-info/
+cover-art-subs/
 
 *.png
 *.jpg

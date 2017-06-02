@@ -20,7 +20,7 @@ pip3 install ./scrobble-shelf
 scrobble-shelf {LAST FM USERNAME} {output dir (i.e., /var/www/scrobble-shelf)} [--period 6months]
 ```
 
-scrobble-shelf also allows you to supply it with local files for cover art for albums missing cover art on last.fm, or those which are incorrectly scrobbled.  Simply add keys with partial string matches to `COVER_ART_SUBS`, and values of the local paths.  Note that these are only sourced in absence of artwork on last.fm.
+scrobble-shelf also allows you to substitute local files for albums missing cover art on last.fm, or those which are incorrectly scrobbled.  Simply add keys with partial string matches to `COVER_ART_SUBS`, and values of the local paths.  Note that these are only sourced in absence of artwork on last.fm.
 
 #### Local artwork files example:
 

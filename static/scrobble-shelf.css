@@ -12,6 +12,7 @@ body {
     height: 300px;
     display: inline-block;
     margin: 25px 25px;
+    background-size: cover;
 }
 .shelf-item-contents:hover {
     opacity: 1;

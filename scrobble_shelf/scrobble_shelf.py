@@ -5,6 +5,8 @@ from shutil import copyfileobj
 API_KEY = os.environ['LAST_FM_API_KEY']
 API_SECRET = os.environ['LAST_FM_API_SECRET']
 
+COVER_ART_SUBS = {} 
+
 parser = argparse.ArgumentParser(description='Create interactive album collages from last.fm scrobble stats.')
 parser.add_argument('username')
 parser.add_argument('output_dir', metavar='[output directory]')
@@ -26,6 +28,7 @@ class ScrobbleShelf():
         for i, album in enumerate(self.albums):
                 print("fetching artwork for album {}/{}".format(i, len(self.albums)))
                 cover_art_url = album.get_cover_image()
+                cover_art_exists = False
 
                 if cover_art_url:
                     cover_art = requests.get(album.get_cover_image(), stream=True)
@@ -36,6 +39,20 @@ class ScrobbleShelf():
                         cover_art.raw.decode_content = True
                         copyfileobj(cover_art.raw, f)
 
+                    cover_art_exists = True
+                else:
+                    for key, path in COVER_ART_SUBS.items():
+                        if album.title.lower().find(key) != -1:
+                            extension = '.' + path.split('.')[-1]
+                            cover_art_output = os.path.join(self.cover_art_path, str(i) + extension)
+
+                            with open(path, 'rb') as src:
+                                with open(cover_art_output, 'wb') as dest:
+                                    copyfileobj(src, dest)
+
+                            cover_art_exists = True
+                            break
+
                 self.metadata.append({
                     "index": i,
                     "album": album.title,
@@ -43,7 +60,7 @@ class ScrobbleShelf():
                     "url": urllib.parse.unquote(album.get_url()),
                     "coverArt": 
                         os.path.relpath(cover_art_output, self.output_dir) if \
-                        cover_art_url else None
+                        cover_art_exists else None
                 })
 
     def create_json(self):

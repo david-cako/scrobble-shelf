@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,600');
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica', 'Helvetica Neue', sans-serif;
@@ -20,17 +20,23 @@ body {
 }
 .shelf-item-contents {
     padding-top: 100px;
+    padding-left: 10px;
     color: #000;
     border: 25px solid transparent;
     background-color: #fff;
-    font-weight: 400;
     box-sizing: border-box;
     opacity: 0;
     height: 100%;
-    text-align: center;
+    text-align: left;
 }
 .shelf-title, .shelf-artist {
     pointer-events: none;
+}
+.shelf-title {
+    font-weight: 600;
+}
+.shelf-artist {
+    font-weight: 400;
 }
 .shelf-item.no-img > .shelf-item-contents {
     opacity: 1;

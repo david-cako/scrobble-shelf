@@ -1,0 +1,2 @@
+COVER_ART_SUBS = {}
+

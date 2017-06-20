@@ -30,7 +30,7 @@ scrobble-shelf {LAST FM USERNAME} {output dir (i.e., /var/www/scrobble-shelf)} [
 
 #### Local artwork files:
 
-scrobble-shelf also allows you to substitute local files for albums missing cover art on last.fm, or those which are incorrectly scrobbled.  Simply add keys with partial string matches to `COVER_ART_SUBS`, and values of the local paths.  Note that these are only sourced in absence of artwork on last.fm.
+scrobble-shelf also allows you to substitute local files for albums missing cover art on last.fm, or those which are incorrectly scrobbled.  Simply add keys with partial string matches to `COVER_ART_SUBS` in the `cover_art_subs.py` file, and values of the local paths.  Note that these are only sourced in absence of artwork on last.fm.
 
 ```
 COVER_ART_SUBS = {

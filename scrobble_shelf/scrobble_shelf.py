@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-import pylast, os, json, argparse, requests, mimetypes, urllib
+import pylast, os, json, argparse, requests, urllib
 from .cover_art_subs import COVER_ART_SUBS
 from shutil import copyfileobj
 
@@ -31,7 +31,11 @@ class ScrobbleShelf():
 
                 if cover_art_url:
                     cover_art = requests.get(album.get_cover_image(), stream=True)
-                    extension = mimetypes.guess_extension(cover_art.headers['content-type'])
+                    extension = cover_art_url.split(".")
+                    if len(extension) < 2:
+                        extension = ""
+                    else:
+                        extension = extension[-1]
                     cover_art_output = os.path.join(self.cover_art_path, "".join(x for x in album.title if x.isalnum()) + extension)
                     if not os.path.exists(cover_art_output):
                         with open(cover_art_output, 'wb') as f:

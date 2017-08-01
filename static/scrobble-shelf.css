@@ -1,11 +1,18 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,600');
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica', 'Helvetica Neue', sans-serif;
 }
 #scrobble-shelf {
     text-align: center;
-    width: 100%:
+    width: 100%;
+}
+#title-header {
+  font-size: 80px;
+  margin-right: 55px;
+  text-align: right;
+  margin-bottom: 50px;
+  margin-top: 50px;
+  font-weight: 600;
+  font-family: "Helvetica", sans-serif;
 }
 .shelf-item {
     width: 300px;

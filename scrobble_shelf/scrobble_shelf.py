@@ -1,5 +1,5 @@
-#! /usr/bin/env python
-import pylast, os, json, argparse, requests, mimetypes, urllib
+#!/usr/bin/env python
+import pylast, os, json, argparse, requests, mimetypes, urllib, glob
 from .cover_art_subs import COVER_ART_SUBS
 from shutil import copyfileobj
 
@@ -28,15 +28,19 @@ class ScrobbleShelf():
                 print("fetching artwork for album {}/{}".format(i, len(self.albums)))
                 cover_art_url = album.get_cover_image()
                 cover_art_exists = False
+                
+                matching_files = glob.glob(os.path.join(self.cover_art_path, "".join(x for x in album.title if x.isalnum()) + "*"))
 
-                if cover_art_url:
+                if len(matching_files) > 0:
+                    cover_art_output = matching_files[0]
+                    cover_art_exists = True
+                elif cover_art_url:
                     cover_art = requests.get(album.get_cover_image(), stream=True)
                     extension = mimetypes.guess_extension(cover_art.headers['content-type'])
                     cover_art_output = os.path.join(self.cover_art_path, "".join(x for x in album.title if x.isalnum()) + extension)
-                    if not os.path.exists(cover_art_output):
-                        with open(cover_art_output, 'wb') as f:
-                            cover_art.raw.decode_content = True
-                            copyfileobj(cover_art.raw, f)
+                    with open(cover_art_output, 'wb') as f:
+                        cover_art.raw.decode_content = True
+                        copyfileobj(cover_art.raw, f)
                     cover_art_exists = True
                 else:
                     for key, path in COVER_ART_SUBS.items():

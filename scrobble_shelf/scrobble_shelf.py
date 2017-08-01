@@ -36,7 +36,11 @@ class ScrobbleShelf():
                     cover_art_exists = True
                 elif cover_art_url:
                     cover_art = requests.get(album.get_cover_image(), stream=True)
-                    extension = mimetypes.guess_extension(cover_art.headers['content-type'])
+                    extension = cover_art_url.split(".")
+                    if len(extension) < 2:
+                        extension = ""
+                    else:
+                        extension = extension[-1]
                     cover_art_output = os.path.join(self.cover_art_path, "".join(x for x in album.title if x.isalnum()) + extension)
                     with open(cover_art_output, 'wb') as f:
                         cover_art.raw.decode_content = True

@@ -1,40 +1,52 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica', 'Helvetica Neue', sans-serif;
+    font-family: 'Lato', 'Helvetica', 'Helvetica Neue', sans-serif;
+}
+html {
+    border: solid 15px #000;
 }
 #scrobble-shelf {
     text-align: center;
     width: 100%;
 }
 #title-header {
-  font-size: 80px;
-  margin-right: 55px;
-  text-align: right;
-  margin-bottom: 50px;
-  margin-top: 50px;
-  font-weight: 600;
-  font-family: "Helvetica", sans-serif;
+    font-size: 80px;
+    margin-right: 55px;
+    text-align: right;
+    margin-bottom: 35px;
+    margin-top: 50px;
+    font-weight: 600;
+    font-family: "Lato", sans-serif;
 }
 .shelf-item {
     width: 300px;
     height: 300px;
     display: inline-block;
     margin: 25px 25px;
+    position: relative;
     background-size: cover;
+    border-radius: 4px;
+    transition: transform 100ms ease-in, box-shadow 100ms ease-in;
+}
+.shelf-item:hover {
+    transform: scale(1.05);
+    box-shadow: 2px 2px 20px 0px rgba(0,0,0,.5);
+    transition: transform 100ms ease-in, box-shadow 100ms ease-in;
 }
 .shelf-item-contents:hover {
     opacity: 1;
-    border-color: #000;
 }
 .shelf-item-contents {
-    padding-top: 100px;
-    padding-left: 10px;
-    color: #000;
-    border: 25px solid transparent;
-    background-color: #fff;
-    box-sizing: border-box;
-    opacity: 0;
     height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 4px;
+    color: #fff;
+    background-color: rgba(0,0,0,0.6);
+    opacity: 0;
     text-align: left;
+    transition: opacity 100ms ease-in;
 }
 .shelf-title, .shelf-artist {
     width: 225px;
@@ -43,12 +55,16 @@ body {
     display: block;
     pointer-events: none;
     text-overflow: ellipsis;
+    margin-left: 20px;
 }
 .shelf-title {
-    font-weight: 600;
+    margin-top: 120px;
+    font-weight: 300;
+    font-size: 18px;
 }
 .shelf-artist {
     font-weight: 400;
+    font-size: 16px;
 }
 .shelf-item.no-img > .shelf-item-contents {
     opacity: 1;

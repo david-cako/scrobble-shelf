@@ -1,8 +1,10 @@
 # scrobble-shelf
 
-### Create interactive album collages from last.fm scrobble stats.
+### Create interactive album collages from last.fm scrobble stats.  
 
-https://davidcako.com/scrobble-shelf/scrobble-shelf
+https://davidcako.com/scrobble-shelf/
+
+![screenshot](https://i.imgur.com/ZiDEiB8.jpg)
 
 I wanted a way to integrate my last.fm listening stats with my website that wasn't just a static collage, and wasn't just a direct link to last.fm.
 

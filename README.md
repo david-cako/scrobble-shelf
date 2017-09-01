@@ -18,7 +18,7 @@ This python script and accompanying static files allows you to scrape your last.
 pip3 install ./scrobble-shelf
 ```
 
-Get a [last.fm API key](https://www.last.fm/api).  scrobble shelf expects `API_KEY` and `API_SECRET` environment variables.  You can either pass these into it when you run it (`API_KEY={...} API_SECRET={...} scrobble-shelf ...`) or add them to your `~/.bashrc`.
+Get a [last.fm API key](https://www.last.fm/api).  scrobble shelf expects `API_KEY` and `API_SECRET` environment variables.  You can either pass them in when run (`API_KEY={...} API_SECRET={...} scrobble-shelf ...`) or add them to your `~/.bashrc`.
 
 Add an element on your desired page with the id `scrobble-shelf`, and include the corresponding `.css` and `.js` files from the `static` folder in this repository.
 

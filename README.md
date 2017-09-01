@@ -1,4 +1,4 @@
-# scrobble-shelf
+# scrobble shelf
 
 ### Create interactive album collages from last.fm scrobble stats.  
 
@@ -20,11 +20,13 @@ pip3 install ./scrobble-shelf
 
 #### Usage (default period is 3 months):
 
+Get a last.fm API key.  scrobble shelf expects `API_KEY` and `API_SECRET` environment variables.  You can either pass these into it when you run it (`API_KEY={} API_SECRET={} scrobble-shelf ...`) or add them to your `~/.bashrc`.
+
 Add an element on your desired page with the id `scrobble-shelf`, and include the corresponding `.css` and `.js` files from the `static` folder in this repository.
 
 Edit the `pathRoot` variable in `scrobble-shelf.js` if you will not be using `/var/www/scrobble-shelf/` as your output directory.
 
-Then, run scrobble-shelf:
+Then, run scrobble shelf:
 
 ```
 scrobble-shelf {LAST FM USERNAME} {output dir (i.e., /var/www/scrobble-shelf)} [--period 6months]
@@ -32,7 +34,7 @@ scrobble-shelf {LAST FM USERNAME} {output dir (i.e., /var/www/scrobble-shelf)} [
 
 #### Local artwork files:
 
-scrobble-shelf also allows you to substitute local files for albums missing cover art on last.fm, or those which are incorrectly scrobbled.  Simply add keys with partial string matches to `COVER_ART_SUBS` in the `cover_art_subs.py` file, and values of the local paths.  Note that these are only sourced in absence of artwork on last.fm.
+scrobble shelf also allows you to substitute local files for albums missing cover art on last.fm, or those which are incorrectly scrobbled.  Simply add keys with partial string matches to `COVER_ART_SUBS` in the `cover_art_subs.py` file, and values of the local paths.  Note that these are only sourced in absence of artwork on last.fm.
 
 ```
 COVER_ART_SUBS = {

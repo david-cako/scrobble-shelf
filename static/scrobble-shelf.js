@@ -17,6 +17,7 @@ function shelfItem(albumObj) {
                 <div class="shelf-artist">${albumObj.artist}</div> \
             </div>
         </div>`;
+    item.setAttribute("target", "_blank");
     return item;
 }
 

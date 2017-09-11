@@ -26,7 +26,10 @@ class ScrobbleShelf():
 
         for i, album in enumerate(self.albums):
                 print("fetching artwork for album {}/{}".format(i, len(self.albums)))
-                cover_art_url = album.get_cover_image()
+                try:
+                    cover_art_url = album.get_cover_image()
+                except:
+                    cover_art_url = None    # force fallback case (check static dir)
                 cover_art_exists = False
                 
                 matching_files = glob.glob(os.path.join(self.cover_art_path, "".join(x for x in album.title if x.isalnum()) + "*"))

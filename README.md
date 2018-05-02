@@ -31,7 +31,7 @@ pip3 install ./scrobble-shelf
 scrobble-shelf {LAST FM USERNAME} {output dir (i.e., /var/www/scrobble-shelf)} [--period 6months]
 ```
 
-Note that you will need to run the above as a cron job if you wish to have scrobble shelf automatically update.
+Note that you will need to add the above as a cron job if you wish to have scrobble shelf automatically update.
 
 #### Local artwork files:
 

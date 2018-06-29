@@ -32,12 +32,19 @@ html {
     border-radius: 4px;
     transition: transform 100ms ease-in, box-shadow 100ms ease-in;
 }
-.shelf-item:hover {
+
+@media (max-width: 1100px) {
+    .shelf-item {
+        margin: 10px;
+    }
+}
+
+.shelf-item:active, .shelf-item:hover {
     transform: scale(1.05);
     box-shadow: 2px 2px 20px 0px rgba(0,0,0,.5);
     transition: transform 100ms ease-in, box-shadow 100ms ease-in;
 }
-.shelf-item-contents:hover {
+.shelf-item-contents:active, .shelf-item-contents:hover {
     opacity: 1;
 }
 .shelf-item-contents {
@@ -52,6 +59,12 @@ html {
     opacity: 0;
     text-align: left;
     transition: opacity 100ms ease-in;
+}
+.album-link {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
 }
 .shelf-title, .shelf-artist {
     width: 225px;

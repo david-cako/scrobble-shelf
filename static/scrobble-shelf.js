@@ -1,8 +1,7 @@
 var pathRoot = "/scrobble-shelf/";
 
 function shelfItem(albumObj) {
-    var item = document.createElement("a");
-    item.href = albumObj.url;
+    var item = document.createElement("div");
     if (albumObj.coverArt) {
         var backgroundImage = albumObj.coverArt;
         var itemClass = "shelf-item";
@@ -10,16 +9,32 @@ function shelfItem(albumObj) {
         var backgroundImage = "";
         var itemClass = "shelf-item no-img";
     }
-    item.innerHTML = `<div class="${itemClass}" \
-        style="background-image: url(${backgroundImage});"> \
-            <div class="shelf-item-contents"> \
-                <div class="shelf-title">${albumObj.album}</div> \
-                <div class="shelf-artist">${albumObj.artist}</div> \
-            </div>
+    item.classList.add(itemClass);
+    item.style.backgroundImage = `url(${backgroundImage})`;
+    item.innerHTML = `<div class="shelf-item-contents"> \
+        <div class="shelf-title">${albumObj.album}</div> \
+            <div class="shelf-artist">${albumObj.artist}</div> \
+            <a href="${albumObj.url}" class="album-link"></a> \
         </div>`;
-    item.setAttribute("target", "_blank");
     return item;
 }
+
+var IS_TOUCH = false;
+var LAST_TOUCHED = undefined;
+
+document.addEventListener("touchstart", e => {
+    IS_TOUCH = true;
+})
+
+document.getElementById("scrobble-shelf").addEventListener("click", e=> {
+    console.log(e);
+    if (IS_TOUCH && e.target.matches(".album-link")) {
+        if (LAST_TOUCHED !== e.target) {
+            LAST_TOUCHED = e.target;
+            e.preventDefault();
+        }
+    }
+})
 
 function appendItems(shelfJson) {
     var shelfObj = document.getElementById("scrobble-shelf");

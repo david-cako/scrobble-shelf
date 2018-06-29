@@ -17,6 +17,11 @@ html {
     font-weight: 300;
     font-family: "Lato", sans-serif;
 }
+@media (max-width: 830px) {
+    #title-header{
+        font-size: 50px;
+    }
+}
 .shelf-item {
     width: 300px;
     height: 300px;

@@ -4,7 +4,7 @@ function shelfItem(albumObj) {
     var item = document.createElement("a");
     item.href = albumObj.url;
     if (albumObj.coverArt) {
-        var backgroundImage = pathRoot + albumObj.coverArt;
+        var backgroundImage = albumObj.coverArt;
         var itemClass = "shelf-item";
     } else {
         var backgroundImage = "";

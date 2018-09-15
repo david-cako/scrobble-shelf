@@ -25,9 +25,11 @@ class ScrobbleShelf():
             print("processing album {}/{}".format(i, len(self.albums)))
             album = self.network.get_album(input_album[0], input_album[1])
             cover_art_output = album.get_cover_image()
+                
+            cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", self.output_dir)
 
-            if cover_art_output is None:
-                cover_art_output = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", "/var/www")
+            if os.path.exists(self.output_dir + cover_art_local):
+                cover_art_output = cover_art_local
                 print("add cover art for {} at {}".format(album.title, cover_art_output))
 
             self.metadata.append({

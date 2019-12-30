@@ -22,24 +22,42 @@ class ScrobbleShelf():
             os.mkdir(self.cover_art_path)
 
         for i, input_album in enumerate(self.albums):
-            print("processing album {}/{}".format(i, len(self.albums)))
-            album = self.network.get_album(input_album[0], input_album[1])
-            cover_art_output = album.get_cover_image()
-                
-            cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", "/var/www")
+            print("processing album {}/{} | {} - {}".format(
+                i, len(self.albums), input_album[0], input_album[1]))
 
-            if os.path.exists("/var/www" + cover_art_local):
-                cover_art_output = cover_art_local
-                print("add cover art for {} at {}".format(album.title, cover_art_output))
+            try:
+                album = self.network.get_album(input_album[0], input_album[1])
+                cover_art_output = album.get_cover_image()
+                    
+                cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", "/var/www")
 
-            self.metadata.append({
-                "index": i,
-                "album": album.title,
-                "artist": album.artist.name,
-                "url": urllib.parse.unquote(album.get_url()),
-                "coverArt": 
-                    cover_art_output
-            })
+                if os.path.exists("/var/www" + cover_art_local):
+                    cover_art_output = cover_art_local
+                    print("add cover art for {} at {}".format(album.title, cover_art_output))
+
+                self.metadata.append({
+                    "index": i,
+                    "album": album.title,
+                    "artist": album.artist.name,
+                    "url": urllib.parse.unquote(album.get_url()),
+                    "coverArt": 
+                        cover_art_output
+                })
+            except pylast.WSError:
+                print("Not found on last.fm, using user input")
+                cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in input_album[0] if c.isalnum()).rstrip()) + ".jpg", "/var/www")
+                if os.path.exists("/var/www" + cover_art_local):
+                    cover_art_output = cover_art_local
+                    print("add cover art for {} at {}".format(input_album[0], cover_art_output))
+
+                self.metadata.append({
+                    "index": i,
+                    "album": input_album[1],
+                    "artist": input_album[0],
+                    "url": "",
+                    "coverArt": 
+                        cover_art_output if cover_art_output else ""
+                })
 
 
 

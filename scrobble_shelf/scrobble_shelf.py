@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import pylast, os, json, argparse, requests, mimetypes, urllib, glob
-from .cover_art_subs import COVER_ART_SUBS
 from shutil import copyfileobj
 
 API_KEY = os.environ['LAST_FM_API_KEY']

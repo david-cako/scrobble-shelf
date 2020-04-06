@@ -11,8 +11,8 @@ setup(name='scrobble_shelf',
       entry_points={
           "console_scripts": ['scrobble-shelf = scrobble_shelf.scrobble_shelf:entry_point']
       },
-      install_requires={
+      install_requires=[
           'pylast'
-      }
+      ]
 )
 

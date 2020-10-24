@@ -25,8 +25,19 @@ class ScrobbleShelf():
                 i, len(self.albums), input_album[0], input_album[1]))
 
             try:
-                album = self.network.get_album(input_album[0], input_album[1])
-                cover_art_output = album.get_cover_image()
+                retry = 0
+                album = None
+                cover_art_output = None
+                while retry < 5:
+                    try:
+                        album = self.network.get_album(input_album[0], input_album[1])
+                        cover_art_output = album.get_cover_image()
+                    except pylast.WSError as e:
+                        raise e
+                    except:
+                        retry += 1
+                        continue
+                    break
                     
                 cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", "/var/www")
 

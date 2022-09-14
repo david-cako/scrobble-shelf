@@ -11,11 +11,12 @@ function shelfItem(albumObj) {
     }
     item.classList.add(itemClass);
     item.style.backgroundImage = `url(${backgroundImage})`;
-    item.innerHTML = `<div class="shelf-item-contents"> \
-        <div class="shelf-title">${albumObj.album}</div> \
-            <div class="shelf-artist">${albumObj.artist}</div> \
-            <a href="${albumObj.url}" class="album-link"></a> \
-        </div>`;
+    item.innerHTML = `<a href="${albumObj.url}" class="album-link"> \
+        <div class="shelf-item-contents"> \
+            <div class="shelf-title">${albumObj.album}</div> \
+                <div class="shelf-artist">${albumObj.artist}</div> \
+        </div>\
+        </a>`;
     return item;
 }
 

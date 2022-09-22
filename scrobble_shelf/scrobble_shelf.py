@@ -22,7 +22,7 @@ class ScrobbleShelf():
 
         for i, input_album in enumerate(self.albums):
             print("processing album {}/{} | {} - {}".format(
-                i, len(self.albums), input_album[0], input_album[1]))
+                i+1, len(self.albums), input_album[0], input_album[1]))
 
             try:
                 retry = 0

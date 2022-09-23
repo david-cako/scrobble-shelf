@@ -30,6 +30,16 @@ body {
     }
 }
 
+@media (max-width: 350px) {
+    body {
+        border: 0;
+    }
+
+    #title-header {
+        font-size: 40px;
+    }
+}
+
 .shelf-item {
     width: 300px;
     height: 300px;

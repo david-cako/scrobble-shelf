@@ -1,8 +1,10 @@
 body {
+    margin: 0;
+    padding-bottom: 2em;
+    position: relative;
+    box-sizing: border-box;
+    min-height: 108vh;
     font-family: 'Lato', 'Helvetica', 'Helvetica Neue', sans-serif;
-}
-
-html {
     border: solid 15px #000;
 }
 
@@ -101,8 +103,10 @@ html {
 
 .project-link {
     font-size: 12px;
+    position: absolute;
     font-weight: 400;
-    text-align: left;
+    bottom: 0.8em;
+    left: 1em;
 }
 
 .project-link>a {

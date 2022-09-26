@@ -90,7 +90,6 @@ body {
 
 .shelf-title,
 .shelf-artist {
-    width: 75%;
     overflow: hidden;
     white-space: nowrap;
     display: block;

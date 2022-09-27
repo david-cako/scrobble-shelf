@@ -4,7 +4,7 @@ body {
     position: relative;
     box-sizing: border-box;
     min-height: 108vh;
-    font-family: 'Lato', 'Helvetica', 'Helvetica Neue', sans-serif;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Arial, sans-serif;
     border: solid 15px #000;
 }
 
@@ -21,7 +21,6 @@ body {
     margin-bottom: 35px;
     margin-top: 50px;
     font-weight: 300;
-    font-family: "Lato", sans-serif;
 }
 
 @media (max-width: 830px) {

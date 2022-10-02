@@ -1,3 +1,19 @@
+@font-face {
+    font-family: "Lato";
+    src: url("/static/fonts/Lato-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url("/static/fonts/Lato-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 body {
     margin: 0;
     padding-bottom: 2em;
@@ -57,14 +73,17 @@ body {
 }
 
 .shelf-item:active,
+.shelf-item:focus,
 .shelf-item:hover {
     transform: scale(1.05);
     box-shadow: 2px 2px 20px 0px rgba(0, 0, 0, .5);
     transition: transform 100ms ease-in, box-shadow 100ms ease-in;
+    outline: none;
 }
 
-.shelf-item-contents:active,
-.shelf-item-contents:hover {
+.shelf-item:active .shelf-item-contents,
+.shelf-item:focus .shelf-item-contents,
+.shelf-item:hover .shelf-item-contents {
     opacity: 1;
 }
 

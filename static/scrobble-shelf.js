@@ -1,6 +1,6 @@
 var pathRoot = "/scrobble-shelf/";
 
-function shelfItem(albumObj) {
+function shelfItem(albumObj, idx) {
     var item = document.createElement("div");
     if (albumObj.coverArt) {
         var backgroundImage = albumObj.coverArt;
@@ -11,6 +11,7 @@ function shelfItem(albumObj) {
     }
     item.classList.add(itemClass);
     item.style.backgroundImage = `url(${backgroundImage})`;
+    item.tabIndex = idx + 1;
     item.innerHTML = `<a href="${albumObj.url}" class="album-link"> \
         <div class="shelf-item-contents"> \
             <div class="shelf-title">${albumObj.album}</div> \
@@ -23,7 +24,7 @@ function shelfItem(albumObj) {
 function appendItems(shelfJson) {
     var shelfObj = document.getElementById("scrobble-shelf");
     for (var i = 0; i < shelfJson.length; i++) {
-        shelfObj.appendChild(shelfItem(shelfJson[i]));
+        shelfObj.appendChild(shelfItem(shelfJson[i], i));
     }
 }
 
@@ -51,6 +52,53 @@ function populateShelf() {
     return promise;
 }
 
+function navigateAlbum(event) {
+    let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
+    let dest;
+
+    if (!current) {
+        dest = document.querySelector(".shelf-item");
+        dest && dest.focus();
+        return;
+    }
+
+    if (event.key === "ArrowRight") {
+        dest = current.nextSibling;
+    } else if (event.key === "ArrowLeft") {
+        dest = current.previousSibling;
+    } else if (event.key === "ArrowUp") {
+        let d = current.previousSibling;
+        while (d !== null) {
+            if (d.offsetTop < current.offsetTop &&
+                d.offsetLeft <= current.offsetLeft) {
+                dest = d;
+                break;
+            }
+
+            d = d.previousSibling;
+        }
+    } else if (event.key === "ArrowDown") {
+        let d = current.nextSibling;
+        while (d !== null) {
+            if (d.offsetTop > current.offsetTop &&
+                d.offsetLeft >= current.offsetLeft) {
+                dest = d;
+                break;
+            }
+
+            d = d.nextSibling;
+        }
+    } else if (event.key === "Enter") {
+        current.firstChild && current.firstChild.click();
+    } else if (event.key === "Escape") {
+        document.activeElement && document.activeElement.blur();
+    }
+
+    if (dest) {
+        dest.focus();
+    }
+}
+
 (async () => {
     await populateShelf();
 
@@ -59,7 +107,7 @@ function populateShelf() {
 
     document.addEventListener("touchstart", e => {
         IS_TOUCH = true;
-    })
+    });
 
     document.querySelectorAll(".album-link").forEach(
         elem => elem.addEventListener("click", e => {
@@ -70,4 +118,6 @@ function populateShelf() {
             }
         })
     );
+
+    document.addEventListener("keydown", navigateAlbum);
 })();

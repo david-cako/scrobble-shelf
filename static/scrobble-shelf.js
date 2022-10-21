@@ -112,13 +112,20 @@ function navigateAlbum(event) {
 
     document.querySelectorAll(".album-link").forEach(
         elem => elem.addEventListener("click", e => {
-            console.log(e);
+            e.stopPropagation();
             if (IS_TOUCH && LAST_TOUCHED !== e.target) {
-                LAST_TOUCHED = e.target;
                 e.preventDefault();
+                LAST_TOUCHED = e.target;
             }
         })
     );
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.classList.contains(".album-link")) {
+            document.activeElement.blur();
+            LAST_TOUCHED = undefined;
+        }
+    });
 
     document.addEventListener("keydown", navigateAlbum);
 })();

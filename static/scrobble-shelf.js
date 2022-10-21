@@ -11,6 +11,7 @@ function shelfItem(albumObj, idx) {
     }
     item.classList.add(itemClass);
     item.style.backgroundImage = `image-set(url('${backgroundImage}') 1x, url('${backgroundImage.replace("300x300", "600x600")}') 2x)`;
+    item.style.backgroundImage = `-webkit-image-set(url('${backgroundImage}') 1x, url('${backgroundImage.replace("300x300", "600x600")}') 2x)`;
     item.tabIndex = idx + 1;
     item.innerHTML = `<a href="${albumObj.url}" class="album-link"> \
         <div class="shelf-item-contents"> \

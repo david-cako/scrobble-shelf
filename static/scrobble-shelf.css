@@ -74,7 +74,7 @@ body {
 
 .shelf-item:active,
 .shelf-item:focus,
-.shelf-item:hover {
+#scrobble-shelf:not(.arrow-nav-active) .shelf-item:hover {
     transform: scale(1.05);
     box-shadow: 2px 2px 20px 0px rgba(0, 0, 0, .5);
     transition: transform 100ms ease-in, box-shadow 100ms ease-in;
@@ -83,7 +83,7 @@ body {
 
 .shelf-item:active .shelf-item-contents,
 .shelf-item:focus .shelf-item-contents,
-.shelf-item:hover .shelf-item-contents {
+#scrobble-shelf:not(.arrow-nav-active) .shelf-item:hover .shelf-item-contents {
     opacity: 1;
 }
 

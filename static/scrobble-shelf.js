@@ -65,74 +65,92 @@ function unsetArrowNavigationActive() {
 
 function focusAlbumWithArrowNav(element) {
     setArrowNavigationActive();
-    element.focus();
 
-    arrowNavTarget = element;
+    element.focus({focusVisible: true});
 }
 
-function unfocusArrowNavAlbum() {
-    arrowNavTarget && arrowNavTarget.blur();
-    arrowNavTarget = undefined;
+function unfocusAlbum() {
+    document.activeElement && document.activeElement.blur();
 
     unsetArrowNavigationActive();
 }
 
 function onMouseMove(e) {
-    // unfocusArrowNavAlbum() if cursor screen position has changed.
+    // unfocusAlbum() if cursor screen position has changed.
     // it is not called on mouse events from scrolling.
     if (lastMouseScreenPos !== undefined &&
         (lastMouseScreenPos.x !== e.screenX || lastMouseScreenPos.y !== e.screenY)) {
-            unfocusArrowNavAlbum();
+        unfocusAlbum();
     }
 
-    lastMouseScreenPos = {x: e.screenX, y: e.screenY};
+    lastMouseScreenPos = { x: e.screenX, y: e.screenY };
 }
 
+function getFirstAlbumInView() {
+    const shelfItems = document.querySelectorAll(".shelf-item");
+
+    for (const item of shelfItems) {
+        if (item.getBoundingClientRect().bottom > 0) {
+            return item;
+        }
+    }
+}
+
+function isArrowKeyPress(key) {
+    return (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].indexOf(key) !== -1);
+}
 
 function navigateAlbum(event) {
-    let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
-    let dest;
+    if (isArrowKeyPress(event.key)) {
+        event.preventDefault();
 
-    if (!current) {
-        dest = document.querySelector(".shelf-item");
-        dest && focusAlbumWithArrowNav(dest);
-        return;
-    }
+        let dest;
 
-    if (event.key === "ArrowRight") {
-        dest = current.nextSibling;
-    } else if (event.key === "ArrowLeft") {
-        dest = current.previousSibling;
-    } else if (event.key === "ArrowUp") {
-        let d = current.previousSibling;
-        while (d !== null) {
-            if (d.offsetTop < current.offsetTop &&
-                d.offsetLeft <= current.offsetLeft) {
-                dest = d;
-                break;
-            }
+        let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
 
-            d = d.previousSibling;
+        if (!current) {
+            dest = getFirstAlbumInView();
+
+            dest && focusAlbumWithArrowNav(dest);
+            return;
         }
-    } else if (event.key === "ArrowDown") {
-        let d = current.nextSibling;
-        while (d !== null) {
-            if (d.offsetTop > current.offsetTop &&
-                d.offsetLeft >= current.offsetLeft) {
-                dest = d;
-                break;
-            }
 
-            d = d.nextSibling;
+        if (event.key === "ArrowRight") {
+            dest = current.nextSibling;
+        } else if (event.key === "ArrowLeft") {
+            dest = current.previousSibling;
+        } else if (event.key === "ArrowUp") {
+            let d = current.previousSibling;
+            while (d !== null) {
+                if (d.offsetTop < current.offsetTop &&
+                    d.offsetLeft <= current.offsetLeft) {
+                    dest = d;
+                    break;
+                }
+    
+                d = d.previousSibling;
+            }
+        } else if (event.key === "ArrowDown") {
+            let d = current.nextSibling;
+            while (d !== null) {
+                if (d.offsetTop > current.offsetTop &&
+                    d.offsetLeft >= current.offsetLeft) {
+                    dest = d;
+                    break;
+                }
+    
+                d = d.nextSibling;
+            }
+        }
+
+        if (dest) {
+            focusAlbumWithArrowNav(dest);
         }
     } else if (event.key === "Enter") {
+        let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
         current.firstChild && current.firstChild.click();
     } else if (event.key === "Escape") {
-        unfocusArrowNavAlbum();
-    }
-
-    if (dest) {
-        focusAlbumWithArrowNav(dest);
+        unfocusAlbum();
     }
 }
 

@@ -1,4 +1,6 @@
 var pathRoot = "/scrobble-shelf/";
+let arrowNavTarget;
+let lastMouseScreenPos;
 
 function shelfItem(albumObj, idx) {
     var item = document.createElement("div");
@@ -53,13 +55,47 @@ function populateShelf() {
     return promise;
 }
 
+function setArrowNavigationActive() {
+    document.getElementById("scrobble-shelf").classList.add("arrow-nav-active");
+}
+
+function unsetArrowNavigationActive() {
+    document.getElementById("scrobble-shelf").classList.remove("arrow-nav-active");
+}
+
+function focusAlbumWithArrowNav(element) {
+    setArrowNavigationActive();
+    element.focus();
+
+    arrowNavTarget = element;
+}
+
+function unfocusArrowNavAlbum() {
+    arrowNavTarget && arrowNavTarget.blur();
+    arrowNavTarget = undefined;
+
+    unsetArrowNavigationActive();
+}
+
+function onMouseMove(e) {
+    // unfocusArrowNavAlbum() if cursor screen position has changed.
+    // it is not called on mouse events from scrolling.
+    if (lastMouseScreenPos !== undefined &&
+        (lastMouseScreenPos.x !== e.screenX || lastMouseScreenPos.y !== e.screenY)) {
+            unfocusArrowNavAlbum();
+    }
+
+    lastMouseScreenPos = {x: e.screenX, y: e.screenY};
+}
+
+
 function navigateAlbum(event) {
     let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
     let dest;
 
     if (!current) {
         dest = document.querySelector(".shelf-item");
-        dest && dest.focus();
+        dest && focusAlbumWithArrowNav(dest);
         return;
     }
 
@@ -92,11 +128,11 @@ function navigateAlbum(event) {
     } else if (event.key === "Enter") {
         current.firstChild && current.firstChild.click();
     } else if (event.key === "Escape") {
-        document.activeElement && document.activeElement.blur();
+        unfocusArrowNavAlbum();
     }
 
     if (dest) {
-        dest.focus();
+        focusAlbumWithArrowNav(dest);
     }
 }
 
@@ -128,4 +164,5 @@ function navigateAlbum(event) {
     });
 
     document.addEventListener("keydown", navigateAlbum);
+    document.addEventListener("mousemove", onMouseMove);
 })();

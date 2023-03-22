@@ -87,6 +87,10 @@ body {
     opacity: 1;
 }
 
+#scrobble-shelf.arrow-nav-active .shelf-item {
+    pointer-events: none;
+}
+
 .shelf-item-contents {
     height: 100%;
     width: 100%;

@@ -73,12 +73,30 @@ function unsetArrowNavigationActive() {
     document.getElementById("scrobble-shelf").classList.remove("arrow-nav-active");
 }
 
+function scrollToAlbum(element) {
+    const margin = 40;
+    const pos = element.getBoundingClientRect();
+
+    if (pos.top < margin) {
+        window.scroll({
+            top: window.scrollY + pos.top - margin,
+            behavior: "smooth"
+        });
+    } else if (pos.bottom > window.innerHeight - margin) {
+        window.scroll({
+            top: window.scrollY + (pos.bottom - window.innerHeight + margin),
+            behavior: "smooth"
+        });
+    }
+}
+
 function focusAlbumWithArrowNav(element) {
     setArrowNavigationActive();
 
     document.activeElement && document.activeElement.blur();
 
-    element.focus({ focusVisible: true });
+    element.focus({ focusVisible: true, preventScroll: true });
+    scrollToAlbum(element);
 }
 
 function unfocusArrowNavAlbum() {
@@ -97,13 +115,32 @@ function onMouseMove(e) {
     lastMouseScreenPos = { x: e.screenX, y: e.screenY };
 }
 
-function getFirstAlbumInView() {
+/** Get initial album for arrow key navigation when none is selected. */
+function getInitialAlbum(key) {
     const shelfItems = document.querySelectorAll(".shelf-item");
 
-    for (const item of shelfItems) {
-        if (item.getBoundingClientRect().bottom > 0) {
-            return item;
+    if (key === "ArrowUp" || key === "ArrowLeft") {
+        let selected;
+
+        for (const item of shelfItems) {
+            const pos = item.getBoundingClientRect();
+
+            if (selected === undefined && pos.top > 0) {
+                selected = item;
+            } else if (pos.top > window.innerHeight) {
+                return selected;
+            } else {
+                selected = item;
+            }
         }
+    } else if (key === "ArrowDown" || key === "ArrowRight") {
+        for (const item of shelfItems) {
+            if (item.getBoundingClientRect().bottom > 0) {
+                return item;
+            }
+        }
+    } else {
+        throw new Error("Must pass arrow key direction to getInitialAlbum.")
     }
 }
 
@@ -122,7 +159,7 @@ function navigateAlbum(event) {
         );
 
         if (!current) {
-            dest = getFirstAlbumInView();
+            dest = getInitialAlbum(event.key);
 
             dest && focusAlbumWithArrowNav(dest);
             return;

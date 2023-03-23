@@ -1,5 +1,4 @@
 var pathRoot = "/scrobble-shelf/";
-let arrowNavTarget;
 let lastMouseScreenPos;
 
 function shelfItem(albumObj, idx) {
@@ -31,15 +30,26 @@ function appendItems(shelfJson) {
     }
 }
 
+function insertCakoPlaylist(shelfItems) {
+    shelfItems.unshift({
+        album: "CAKO",
+        artist: "Apple Music",
+        coverArt: "/scrobble-shelf/cover_art/CAKO playlist.png",
+        url: "https://music.apple.com/us/playlist/cako/pl.u-MDAWeb3uW8ZaBL4"
+    });
+}
+
 function populateShelf() {
     var promise = new Promise((resolve, reject) => {
-        var shelfJson = [];
+        var shelfItems = [];
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    shelfJson = JSON.parse(xhr.responseText);
-                    appendItems(shelfJson);
+                    shelfItems = JSON.parse(xhr.responseText);
+
+                    insertCakoPlaylist(shelfItems);
+                    appendItems(shelfItems);
 
                     resolve();
                 } else {
@@ -66,21 +76,22 @@ function unsetArrowNavigationActive() {
 function focusAlbumWithArrowNav(element) {
     setArrowNavigationActive();
 
-    element.focus({focusVisible: true});
-}
-
-function unfocusAlbum() {
     document.activeElement && document.activeElement.blur();
 
+    element.focus({ focusVisible: true });
+}
+
+function unfocusArrowNavAlbum() {
+    document.activeElement && document.activeElement.blur();
     unsetArrowNavigationActive();
 }
 
 function onMouseMove(e) {
-    // unfocusAlbum() if cursor screen position has changed.
+    // unfocusArrowNavAlbum() if cursor screen position has changed.
     // it is not called on mouse events from scrolling.
     if (lastMouseScreenPos !== undefined &&
         (lastMouseScreenPos.x !== e.screenX || lastMouseScreenPos.y !== e.screenY)) {
-        unfocusAlbum();
+        unfocusArrowNavAlbum();
     }
 
     lastMouseScreenPos = { x: e.screenX, y: e.screenY };
@@ -106,7 +117,9 @@ function navigateAlbum(event) {
 
         let dest;
 
-        let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
+        let current = document.querySelector(
+            ".shelf-item:active, .shelf-item:focus, #scrobble-shelf:not(.arrow-nav-active) .shelf-item:hover"
+        );
 
         if (!current) {
             dest = getFirstAlbumInView();
@@ -127,7 +140,7 @@ function navigateAlbum(event) {
                     dest = d;
                     break;
                 }
-    
+
                 d = d.previousSibling;
             }
         } else if (event.key === "ArrowDown") {
@@ -138,7 +151,7 @@ function navigateAlbum(event) {
                     dest = d;
                     break;
                 }
-    
+
                 d = d.nextSibling;
             }
         }
@@ -150,7 +163,7 @@ function navigateAlbum(event) {
         let current = document.querySelector(".shelf-item:active, .shelf-item:focus, .shelf-item:hover");
         current.firstChild && current.firstChild.click();
     } else if (event.key === "Escape") {
-        unfocusAlbum();
+        unfocusArrowNavAlbum();
     }
 }
 

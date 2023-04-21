@@ -204,9 +204,7 @@ function navigateAlbum(event) {
     }
 }
 
-(async () => {
-    await populateShelf();
-
+function setupTouchEvents() {
     var IS_TOUCH = false;
     var LAST_TOUCHED = undefined;
 
@@ -230,6 +228,10 @@ function navigateAlbum(event) {
             LAST_TOUCHED = undefined;
         }
     });
+}
+
+(async () => {
+    await populateShelf();
 
     document.addEventListener("keydown", navigateAlbum);
     document.addEventListener("mousemove", onMouseMove);

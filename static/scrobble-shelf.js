@@ -50,6 +50,8 @@ async function createShelfItems(shelfJson) {
         items.push(item);
     }
 
+    // Load images synchronously after all items are created
+    // to keep layout consistent.
     for (const item of items) {
         try {
             await loadShelfItemImg(item);
@@ -63,7 +65,7 @@ function insertCakoPlaylist(shelfItems) {
     shelfItems.unshift({
         album: "CAKO",
         artist: "Apple Music",
-        coverArt: "/scrobble-shelf/cover_art/CAKO playlist.png",
+        coverArt: encodeURI("/scrobble-shelf/cover_art/CAKO playlist.png"),
         url: "https://music.apple.com/us/playlist/cako/pl.u-MDAWeb3uW8ZaBL4"
     });
 }

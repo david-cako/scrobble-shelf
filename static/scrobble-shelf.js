@@ -50,7 +50,7 @@ async function loadShelfItemImg(item) {
         };
         img.srcset = `${imgSrc}, ${imgSrc.replace("300x300", "600x600")} 2x`
         img.src = imgSrc;
-        item.prepend(img);
+        item.firstChild.prepend(img);
     })
 }
 

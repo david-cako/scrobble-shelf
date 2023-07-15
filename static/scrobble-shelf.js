@@ -74,7 +74,7 @@ function createShelfItems(shelfJson) {
         items.push(item);
     }
 
-    const workerCount = 5;
+    const workerCount = 4;
 
     // Load images after all items are created to keep layout consistent.
     for (var i = 0; i < workerCount; i++) {

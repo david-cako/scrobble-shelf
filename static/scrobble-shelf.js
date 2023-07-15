@@ -52,8 +52,21 @@ async function loadShelfItemImg(item) {
     })
 }
 
+async function loadShelfItemImgWorker(items) {
+    let item = items.shift();
+    while (item) {
+        try {
+            await loadShelfItemImg(item);
+        } catch (e) {
+            console.error("Error loading shelf item image:", e, item)
+        }
+
+        item = items.shift();
+    }
+}
+
 /** Creates shelf item elements and loads images.  */
-async function createShelfItems(shelfJson) {
+function createShelfItems(shelfJson) {
     let items = [];
 
     for (var i = 0; i < shelfJson.length; i++) {
@@ -61,14 +74,11 @@ async function createShelfItems(shelfJson) {
         items.push(item);
     }
 
-    // Load images synchronously after all items are created
-    // to keep layout consistent.
-    for (const item of items) {
-        try {
-            await loadShelfItemImg(item);
-        } catch (e) {
-            console.error("Error loading shelf item image:", e, item)
-        }
+    const workerCount = 5;
+
+    // Load images after all items are created to keep layout consistent.
+    for (var i = 0; i < workerCount; i++) {
+        loadShelfItemImgWorker(items);
     }
 }
 

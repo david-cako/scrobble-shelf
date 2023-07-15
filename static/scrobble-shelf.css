@@ -104,6 +104,7 @@ body {
     padding: 120px 20px 0;
     box-sizing: border-box;
     position: absolute;
+    z-index: 10;
     top: 0px;
     left: 0px;
     border-radius: 8px;

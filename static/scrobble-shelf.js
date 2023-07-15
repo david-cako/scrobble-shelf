@@ -1,32 +1,61 @@
-var pathRoot = "/scrobble-shelf/";
+const pathRoot = "/scrobble-shelf/";
+const shelfDataPath = pathRoot + "scrobble_shelf.json";
+const shelfElem = document.getElementById("scrobble-shelf");
+
 let lastMouseScreenPos;
 
-function shelfItem(albumObj, idx) {
+/** Generates and appends shelf item element for album. */
+function appendShelfItem(albumObj, idx) {
     var item = document.createElement("div");
-    if (albumObj.coverArt) {
-        var backgroundImage = albumObj.coverArt;
-        var itemClass = "shelf-item";
-    } else {
-        var backgroundImage = "";
-        var itemClass = "shelf-item no-img";
-    }
-    item.classList.add(itemClass);
-    item.style.backgroundImage = `image-set(url('${backgroundImage}') 1x, url('${backgroundImage.replace("300x300", "600x600")}') 2x)`;
-    item.style.backgroundImage = `-webkit-image-set(url('${backgroundImage}') 1x, url('${backgroundImage.replace("300x300", "600x600")}') 2x)`;
+    item.className = "shelf-item";
+    item.dataset.imgSrc = albumObj.coverArt;
     item.tabIndex = idx + 1;
+
     item.innerHTML = `<a href="${albumObj.url}" class="album-link"> \
         <div class="shelf-item-contents"> \
             <div class="shelf-title">${albumObj.album}</div> \
                 <div class="shelf-artist">${albumObj.artist}</div> \
         </div>\
-        </a>`;
+    </a>`;
+
+    shelfElem.append(item);
+
     return item;
 }
 
-function appendItems(shelfJson) {
-    var shelfObj = document.getElementById("scrobble-shelf");
+/** Adds item image and returns a promise that resolves or rejects 
+ * on image load. */
+async function loadShelfItemImg(item) {
+    return new Promise((resolve, reject) => {
+        const imgSrc = item.dataset.imgSrc;
+        if (!imgSrc) {
+            return;
+        }
+
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.srcset = `${imgSrc}, ${imgSrc.replace("300x300", "600x600")} 2x`
+        img.src = imgSrc;
+        item.prepend(img);
+    })
+}
+
+/** Creates shelf item elements and loads images.  */
+async function createShelfItems(shelfJson) {
+    let items = [];
+
     for (var i = 0; i < shelfJson.length; i++) {
-        shelfObj.appendChild(shelfItem(shelfJson[i], i));
+        const item = appendShelfItem(shelfJson[i], i);
+        items.push(item);
+    }
+
+    for (const item of items) {
+        try {
+            await loadShelfItemImg(item);
+        } catch (e) {
+            console.error("Error loading shelf item image:", e, item)
+        }
     }
 }
 
@@ -39,17 +68,18 @@ function insertCakoPlaylist(shelfItems) {
     });
 }
 
-function populateShelf() {
+/** Fetches shelf data and populates shelf items. */
+function populateShelf(shelfDataPath) {
     var promise = new Promise((resolve, reject) => {
-        var shelfItems = [];
+        var shelfData = [];
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    shelfItems = JSON.parse(xhr.responseText);
+                    shelfData = JSON.parse(xhr.responseText);
 
-                    insertCakoPlaylist(shelfItems);
-                    appendItems(shelfItems);
+                    insertCakoPlaylist(shelfData);
+                    createShelfItems(shelfData);
 
                     resolve();
                 } else {
@@ -58,7 +88,7 @@ function populateShelf() {
                 }
             }
         };
-        xhr.open("GET", pathRoot + "scrobble_shelf.json", true);
+        xhr.open("GET", shelfDataPath, true);
         xhr.send();
     });
 
@@ -104,9 +134,10 @@ function unfocusArrowNavAlbum() {
     unsetArrowNavigationActive();
 }
 
+/** Updates lastMouseScreenPos and calls unfocusArrowNavAlbum() 
+ *  if cursor screen position has changed.
+    It is not called on mouse events from scrolling. */
 function onMouseMove(e) {
-    // unfocusArrowNavAlbum() if cursor screen position has changed.
-    // it is not called on mouse events from scrolling.
     if (lastMouseScreenPos !== undefined &&
         (lastMouseScreenPos.x !== e.screenX || lastMouseScreenPos.y !== e.screenY)) {
         unfocusArrowNavAlbum();
@@ -115,21 +146,22 @@ function onMouseMove(e) {
     lastMouseScreenPos = { x: e.screenX, y: e.screenY };
 }
 
-/** Get initial album for arrow key navigation when none is selected. */
+/** Get initial album for navigation when none is selected. */
 function getInitialAlbum(key) {
     const shelfItems = document.querySelectorAll(".shelf-item");
 
     if (key === "ArrowUp" || key === "ArrowLeft") {
         let selected;
 
-        for (const item of shelfItems) {
+        for (let i = 0; i < shelfItems.length; i++) {
+            const item = shelfItems[i];
             const pos = item.getBoundingClientRect();
 
-            if (selected === undefined && pos.top > 0) {
-                selected = item;
-            } else if (pos.top > window.innerHeight) {
+            if (pos.top > window.innerHeight) {
                 return selected;
-            } else {
+            } else if (i === shelfItems.length - 1) {
+                return item;
+            } else if (pos.top > 0) {
                 selected = item;
             }
         }
@@ -148,6 +180,7 @@ function isArrowKeyPress(key) {
     return (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].indexOf(key) !== -1);
 }
 
+/** Navigate albums with keyboard events. */
 function navigateAlbum(event) {
     if (isArrowKeyPress(event.key)) {
         event.preventDefault();
@@ -204,34 +237,8 @@ function navigateAlbum(event) {
     }
 }
 
-function setupTouchEvents() {
-    var IS_TOUCH = false;
-    var LAST_TOUCHED = undefined;
-
-    document.addEventListener("touchstart", e => {
-        IS_TOUCH = true;
-    });
-
-    document.querySelectorAll(".album-link").forEach(
-        elem => elem.addEventListener("click", e => {
-            e.stopPropagation();
-            if (IS_TOUCH && LAST_TOUCHED !== e.target) {
-                e.preventDefault();
-                LAST_TOUCHED = e.target;
-            }
-        })
-    );
-
-    document.addEventListener("click", (e) => {
-        if (!e.target.classList.contains(".album-link")) {
-            document.activeElement.blur();
-            LAST_TOUCHED = undefined;
-        }
-    });
-}
-
 (async () => {
-    await populateShelf();
+    await populateShelf(shelfDataPath);
 
     document.addEventListener("keydown", navigateAlbum);
     document.addEventListener("mousemove", onMouseMove);

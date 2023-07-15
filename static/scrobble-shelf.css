@@ -25,8 +25,10 @@ body {
 }
 
 #scrobble-shelf {
-    text-align: center;
-    width: 100%;
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #title-header {
@@ -58,12 +60,17 @@ body {
 .shelf-item {
     width: 300px;
     height: 300px;
+    overflow: hidden;
     display: inline-block;
     margin: 25px 25px;
     position: relative;
     background-size: cover;
     border-radius: 8px;
     transition: transform 100ms ease-in, box-shadow 100ms ease-in;
+}
+
+.shelf-item img {
+    height: 100%;
 }
 
 @media (max-width: 1100px) {
@@ -96,6 +103,7 @@ body {
     width: 100%;
     padding: 120px 20px 0;
     box-sizing: border-box;
+    position: absolute;
     top: 0px;
     left: 0px;
     border-radius: 8px;

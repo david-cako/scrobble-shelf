@@ -33,8 +33,21 @@ async function loadShelfItemImg(item) {
         }
 
         const img = new Image();
-        img.onload = resolve;
-        img.onerror = reject;
+
+        const timeout = setTimeout(() => {
+            reject("Image load timed out.");
+            img.src = "";
+            img.srcset = "";
+        }, 5000);
+
+        img.onload = () => {
+            clearTimeout(timeout);
+            resolve();
+        };
+        img.onerror = (e) => {
+            clearTimeout(timeout);
+            reject(e);
+        };
         img.srcset = `${imgSrc}, ${imgSrc.replace("300x300", "600x600")} 2x`
         img.src = imgSrc;
         item.prepend(img);

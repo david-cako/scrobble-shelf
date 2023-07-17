@@ -12,6 +12,7 @@ function appendShelfItem(albumObj, idx) {
     item.tabIndex = idx + 1;
 
     item.innerHTML = `<a href="${albumObj.url}" class="album-link"> \
+        <img > \
         <div class="shelf-item-contents"> \
             <div class="shelf-title">${albumObj.album}</div> \
                 <div class="shelf-artist">${albumObj.artist}</div> \
@@ -29,14 +30,19 @@ async function loadShelfItemImg(item) {
     return new Promise((resolve, reject) => {
         const imgSrc = item.dataset.imgSrc;
         if (!imgSrc) {
-            return;
+            reject("Missing img-src attribute for item.", item);
+        }
+
+        const imgElem = item.querySelector("img");
+        if (!imgElem) {
+            reject("Missing img element for item.", item);
         }
 
         const img = new Image();
 
         const timeout = setTimeout(() => {
             reject("Image load timed out.");
-        }, 5000);
+        }, 10000);
 
         img.onload = () => {
             clearTimeout(timeout);
@@ -48,17 +54,28 @@ async function loadShelfItemImg(item) {
         };
         img.srcset = `${imgSrc}, ${imgSrc.replace("300x300", "600x600")} 2x`
         img.src = imgSrc;
-        item.firstChild.prepend(img);
+
+        imgElem.replaceWith(img);
     })
 }
 
 async function loadShelfItemImgWorker(items) {
     let item = items.shift();
     while (item) {
-        try {
-            await loadShelfItemImg(item);
-        } catch (e) {
-            console.error("Error loading shelf item image:", e, item)
+        let imgLoaded;
+
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        while (!imgLoaded || attempts >= maxAttempts) {
+            try {
+                attempts++;
+                
+                await loadShelfItemImg(item);
+                imgLoaded = true;
+            } catch (e) {
+                console.error("Error loading shelf item image:", e, item)
+            }
         }
 
         item = items.shift();

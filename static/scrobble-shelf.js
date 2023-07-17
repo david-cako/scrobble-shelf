@@ -67,14 +67,14 @@ async function loadShelfItemImgWorker(items) {
         let attempts = 0;
         const maxAttempts = 5;
 
-        while (!imgLoaded || attempts >= maxAttempts) {
+        while (!imgLoaded && attempts < maxAttempts) {
             try {
                 attempts++;
                 
                 await loadShelfItemImg(item);
                 imgLoaded = true;
             } catch (e) {
-                console.error("Error loading shelf item image:", e, item)
+                console.error(`Error loading shelf item image, attempt ${attempts}:`, e, item)
             }
         }
 

@@ -59,6 +59,8 @@ async function loadShelfItemImg(item) {
     })
 }
 
+/** Loads images for items from given array, attempting 
+ * up to 5 times for each item. */
 async function loadShelfItemImgWorker(items) {
     let item = items.shift();
     while (item) {
@@ -70,7 +72,7 @@ async function loadShelfItemImgWorker(items) {
         while (!imgLoaded && attempts < maxAttempts) {
             try {
                 attempts++;
-                
+
                 await loadShelfItemImg(item);
                 imgLoaded = true;
             } catch (e) {
@@ -99,6 +101,7 @@ function createShelfItems(shelfJson) {
     }
 }
 
+/** Inserts shelf item object for CAKO Apple Music playlist. */
 function insertCakoPlaylist(shelfItems) {
     shelfItems.unshift({
         album: "CAKO",

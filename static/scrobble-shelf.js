@@ -52,7 +52,6 @@ async function loadShelfItemImg(item) {
             clearTimeout(timeout);
             reject(e);
         };
-        img.srcset = `${imgSrc}, ${imgSrc.replace("300x300", "600x600")} 2x`
         img.src = imgSrc;
 
         imgElem.replaceWith(img);
@@ -106,7 +105,7 @@ function insertCakoPlaylist(shelfItems) {
     shelfItems.unshift({
         album: "CAKO",
         artist: "Apple Music",
-        coverArt: encodeURI("/scrobble-shelf/cover_art/CAKO playlist.png"),
+        coverArt: encodeURI("/scrobble-shelf/cover_art_local/CAKO playlist.png"),
         url: "https://music.apple.com/us/playlist/cako/pl.u-MDAWeb3uW8ZaBL4"
     });
 }

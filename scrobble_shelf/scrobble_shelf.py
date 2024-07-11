@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import pylast, os, json, argparse, requests, mimetypes, urllib, glob
-from shutil import copyfileobj
+import pylast, os, json, argparse, urllib
+import urllib.request
+from urllib.parse import urlparse
 
 API_KEY = os.environ['LAST_FM_API_KEY']
 API_SECRET = os.environ['LAST_FM_API_SECRET']
@@ -16,6 +17,7 @@ class ScrobbleShelf():
         self.albums = input_albums
         self.output_dir = output_dir
         self.cover_art_path = os.path.join(output_dir, 'cover_art')
+        self.cover_art_local_path = os.path.join(output_dir, 'cover_art_local')
 
         if not os.path.exists(self.cover_art_path):
             os.mkdir(self.cover_art_path)
@@ -31,19 +33,49 @@ class ScrobbleShelf():
                 while retry < 5:
                     try:
                         album = self.network.get_album(input_album[0], input_album[1])
-                        cover_art_output = album.get_cover_image()
+                        break
                     except pylast.WSError as e:
-                        raise e
+                        raise Exception(print("Error fetching album: {} {}".format(input_album[0], input_album[1])), e)
                     except:
                         retry += 1
                         continue
-                    break
+
+                if album is None:
+                    raise Exception("Could not fetch album from last.fm: {} {}".format(input_album[0], input_album[1]))
                     
-                cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", "/var/www")
+                cover_art_local = "/" + os.path.relpath(
+                    os.path.join(
+                        self.cover_art_local_path, 
+                        "".join(c for c in album.title if c.isalnum()).rstrip()) + ".jpg", "/var/www")
 
                 if os.path.exists("/var/www" + cover_art_local):
                     cover_art_output = cover_art_local
                     print("add cover art for {} at {}".format(album.title, cover_art_output))
+                else:
+                    cover_image_url = album.get_cover_image()
+                    cover_image_url = cover_image_url.replace("300x300", "600x600")
+
+                    u = urlparse(cover_image_url)
+                    filename = os.path.basename(u.path)
+                    dest = os.path.join(self.cover_art_path, filename)
+
+                    if not os.path.exists(dest):
+                        retry = 0
+
+                        while True:
+                            try:
+                                urllib.request.urlretrieve(cover_image_url, dest)
+                                break
+                            except Exception as e:
+                                retry += 1
+                                if retry < 5:
+                                    continue
+                                else:
+                                    raise Exception("Error fetching cover art: ", e)
+                            
+                    cover_art_output = "/" + os.path.relpath(
+                        os.path.join(self.cover_art_path, filename),
+                        "/var/www")
 
                 self.metadata.append({
                     "index": i,
@@ -53,9 +85,12 @@ class ScrobbleShelf():
                     "coverArt": 
                         cover_art_output
                 })
-            except pylast.WSError:
-                print("Not found on last.fm, using user input")
-                cover_art_local = "/" + os.path.relpath(os.path.join(self.cover_art_path, "".join(c for c in input_album[0] if c.isalnum()).rstrip()) + ".jpg", "/var/www")
+            except Exception as e:
+                print(e)
+                cover_art_local = "/" + os.path.relpath(
+                    os.path.join(
+                        self.cover_art_path, 
+                        "".join(c for c in input_album[0] if c.isalnum()).rstrip()) + ".jpg", "/var/www")
                 if os.path.exists("/var/www" + cover_art_local):
                     cover_art_output = cover_art_local
                     print("add cover art for {} at {}".format(input_album[0], cover_art_output))
@@ -68,8 +103,6 @@ class ScrobbleShelf():
                     "coverArt": 
                         cover_art_output if cover_art_output else ""
                 })
-
-
 
     def create_json(self):
         with open(os.path.join(self.output_dir, 'scrobble_shelf.json'), 'w') as f:

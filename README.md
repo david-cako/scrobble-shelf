@@ -28,7 +28,7 @@ pip3 install ./scrobble-shelf
 #### Usage (default period is 3 months):
 
 ```
-scrobble-shelf {LAST FM USERNAME} {output dir (i.e., /var/www/scrobble-shelf)} [--period 6months]
+scrobble-shelf LAST_FM_USERNAME OUTPUT_DIR [--period 6months]
 ```
 
 Note that you will need to add the above as a cron job if you wish to have scrobble shelf automatically update.

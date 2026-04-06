@@ -15,7 +15,9 @@ This is the `manual-input` branch, which has become default.  This utility previ
 #### Installation:
 
 ```
-pip3 install ./scrobble-shelf
+python3 -m venv venv
+source venv/bin/activate
+pip3 install .
 ```
 
 - Get a [last.fm API key](https://www.last.fm/api).  scrobble shelf expects `API_KEY` and `API_SECRET` environment variables.  You can either pass them in when run (`API_KEY={...} API_SECRET={...} scrobble-shelf ...`) or add them to your `~/.bashrc`.
@@ -28,9 +30,6 @@ pip3 install ./scrobble-shelf
 #### Usage:
 
 ```
-python3 -m venv venv
-source venv/bin/activate
-pip3 install .
 scrobble-shelf INPUT.json OUTPUT_DIR [--http-root=/var/www]
 ```
 

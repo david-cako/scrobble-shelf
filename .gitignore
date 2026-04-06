@@ -3,6 +3,8 @@
 *.egg-info/
 cover-art-subs/
 cover_art_subs.py
+venv/
+build/
 
 *.png
 *.jpg
